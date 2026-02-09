@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplementary Notes: GRE Note</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 300;
+            margin-top: 10px;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-left: 5px solid var(--accent-color);
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: #444;
+            margin-top: 25px;
+            font-weight: 600;
+        }
+
+        p, li {
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        .math-block {
+            background-color: #f1f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn-link:hover {
+            background-color: var(--accent-color);
+        }
+
+        strong {
+            color: var(--primary-color);
+        }
+    </style>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Supplementary Notes</h1>
+            <p class="subtitle">Global Rotation Equivariant Phase Modeling for Speech Enhancement with Deep Magnitude-Phase Interaction</p>
+            <p><strong>Supplementary Material</strong></p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <h2>1. Introduction</h2>
+            <p>
+                Conventional neural networks typically operate in Euclidean space, which creates a topological mismatch when modeling phase information that resides on a circular manifold ($S^1$). To address this, we propose a framework that fundamentally respects this geometry.
+            </p>
+            <p>
+                This page provides a brief note (with supporting equations) on why our key components—the <strong>Magnitude-Phase Interactive Convolutional Module (MPICM)</strong> and the <strong>Hybrid-Attention Dual-FFN (HADF)</strong>—preserve <strong>Global Rotation Equivariance (GRE)</strong>. This property ensures that a global rotation of the input phase results in an identical rotation of the output features, encouraging the model to learn relative structural patterns (e.g., group delay) rather than absolute orientation.
+            </p>
+        </section>
+
+        <section>
+            <h2>2. A Note on Global Rotation Equivariance (GRE)</h2>
+            <p>
+                We demonstrate that both the convolutional building block (MPICM) and the attention bottleneck (HADF) strictly preserve the rotation equivariance of the phase stream.
+                Let the input to the network be defined by a complex tensor $\mathbf{Z}_{in}$ (phase stream) and a real tensor $\mathbf{M}_{in}$ (magnitude stream). We define a global phase rotation operator $T_\theta$ such that the rotated inputs are:
+            </p>
+            <div class="math-block">
+                $$ \tilde{\mathbf{Z}}_{in} = \mathbf{Z}_{in} \cdot e^{j\theta}, \quad \tilde{\mathbf{M}}_{in} = \mathbf{M}_{in} $$
+            </div>
+            <p>
+                <strong>Enforced constraints (by design):</strong> (i) all complex-valued linear layers in the phase stream (ComplexConv/ComplexLinear) are <em>complex-linear</em> and <em>bias-free</em>; (ii) any phase-stream normalization (e.g., cRMS) consists only of multiplication by a <em>real</em> scale computed from rotation-invariant quantities (e.g., RMS of $|\mathbf{Z}|$), optionally with a <em>real</em> learnable scale; (iii) interactive gates are <em>real-valued</em> and depend only on rotation-invariant inputs (e.g., $|\mathbf{Z}|$) and/or the magnitude stream (which does not rotate). Under these enforced constraints, the equalities below hold exactly.
+            </p>
+
+            <h3>2.1 Equivariance in MPICM Convolution</h3>
+            <p>
+                The phase stream employs a <strong>bias-free</strong> complex convolution, denoted as $W_{ang}$. For the rotated input $\tilde{\mathbf{Z}}_{in}$:
+            </p>
+            <div class="math-block">
+                $$ \tilde{\mathbf{Z}}_{out} = W_{ang} * \tilde{\mathbf{Z}}_{in} = W_{ang} * (\mathbf{Z}_{in} \cdot e^{j\theta}) $$
+            </div>
+            <p>
+                Due to the linearity of the convolution and the absence of a bias term, the scalar rotation factor $e^{j\theta}$ factors out:
+            </p>
+            <div class="math-block">
+                $$ \tilde{\mathbf{Z}}_{out} = (W_{ang} * \mathbf{Z}_{in}) \cdot e^{j\theta} = \mathbf{Z}_{out} \cdot e^{j\theta} $$
+            </div>
+            <p>
+                Thus, the output of the bias-free convolution is strictly global equivariant.
+            </p>
+
+            <h3>2.2 Invariance in MPICM Interactive Gating</h3>
+            <p>
+                The MPICM utilizes a cross-stream gating mechanism where gates depend on the magnitude stream feature $\tilde{\mathbf{M}}$ and the modulus of the phase stream feature $|\tilde{\mathbf{Z}}|$. In particular, if a phase-stream normalization such as cRMS is applied, it preserves equivariance because it rescales by a real factor computed from $|\mathbf{Z}|$.
+                First, observe that the modulus of the complex feature is rotation <strong>invariant</strong>:
+            </p>
+            <div class="math-block">
+                $$ |\tilde{\mathbf{Z}}_{out}| = |\mathbf{Z}_{out} \cdot e^{j\theta}| = |\mathbf{Z}_{out}| \cdot |e^{j\theta}| = |\mathbf{Z}_{out}| $$
+            </div>
+            <p>
+                Since $\mathbf{M}_{in}$ is unchanged, the magnitude stream feature $\tilde{\mathbf{M}}$ is also invariant. Consequently, the gating functions $\Psi$, which rely solely on $\tilde{\mathbf{M}}$ and $|\tilde{\mathbf{Z}}|$, produce identical gating coefficients regardless of the global phase rotation $\theta$.
+            </p>
+            <p>
+                <strong>Conclusion:</strong> The magnitude output remains invariant ($\tilde{\mathbf{M}}_{out} = \mathbf{M}_{out}$), and the phase-stream output remains equivariant ($\tilde{\mathbf{Z}}_{out} = \mathbf{Z}_{out} \cdot e^{j\theta}$), proving the MPICM is Global Rotation Equivariant.
+            </p>
+
+            <h3>2.3 Equivariance in Hybrid Attention (HADF)</h3>
+            <p>
+                The Hybrid-Attention Dual-FFN (HADF) fuses information using a unified attention map. Let the complex Query and Key vectors for the phase stream be $\mathbf{Q}_{pha}$ and $\mathbf{K}_{pha}$. If the input rotates by $e^{j\theta}$, the bias-free linear projections rotate identically:
+            </p>
+            <div class="math-block">
+                $$ \tilde{\mathbf{Q}}_{pha} = \mathbf{Q}_{pha} \cdot e^{j\theta}, \quad \tilde{\mathbf{K}}_{pha} = \mathbf{K}_{pha} \cdot e^{j\theta} $$
+            </div>
+
+            <p><strong>Invariance of the Attention Score:</strong> The unified attention score is derived from the concatenation of magnitude terms and the complex phase terms. The contribution of the phase stream to the dot product is equivalent to the real part of the <strong>Hermitian inner product</strong>:</p>
+            <div class="math-block">
+                $$ \text{Score}_{pha} = \text{Re}(\mathbf{Q}_{pha} \cdot \mathbf{K}_{pha}^\mathcal{H}) $$
+            </div>
+            <p>
+                Substituting the rotated vectors:
+            </p>
+            <div class="math-block">
+                $$ \text{Score}_{rotated} = \text{Re}\left( (\mathbf{Q}_{pha} e^{j\theta}) \cdot (\mathbf{K}_{pha} e^{j\theta})^\mathcal{H} \right) $$
+                $$ = \text{Re}\left( \mathbf{Q}_{pha} e^{j\theta} \cdot e^{-j\theta} \mathbf{K}_{pha}^\mathcal{H} \right) = \text{Re}(\mathbf{Q}_{pha} \cdot \mathbf{K}_{pha}^\mathcal{H}) $$
+            </div>
+            <p>
+                The rotation terms cancel out. Thus, the attention matrix is <strong>rotation invariant</strong>.
+            </p>
+
+            <p>
+                (Equivalently, if implementation uses concatenation of real/imag parts, i.e., $[\text{Re}(\mathbf{Q}_{pha}),\text{Im}(\mathbf{Q}_{pha})]$ and the standard real dot product, the score is invariant because a common 2D rotation preserves dot products.)
+            </p>
+
+            <p><strong>Equivariance of the Output:</strong> The final output is the product of the invariant attention matrix and the Value vectors $\mathbf{V}_{pha}$. Since $\mathbf{V}_{pha}$ rotates by $e^{j\theta}$ (due to the bias-free projection), the final weighted sum also rotates by $e^{j\theta}$.
+            This confirms that the HADF module fuses cross-modal information without breaking the global rotation equivariance of the phase stream.
+            </p>
+        </section>
+
+        <section style="text-align: center; margin-top: 50px;">
+            <a class="btn-link" href="index.html">Return to Main Project Page</a>
+        </section>
+        
+    </main>
+
+    <footer>
+        <div class="container" style="text-align: center; color: #777; font-size: 0.9rem;">
+            Website designed by OpenAI GPT5.2 Codex. Supplementary Contents written by human authors, polished by Google Gemini Pro 2.5.
+        </div>
+    </footer>
+
+</body>
+</html>

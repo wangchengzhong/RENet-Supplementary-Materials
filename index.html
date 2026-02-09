@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Enhancement Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Supplementary Materials</h1>
+            <p class="subtitle">for "Global Rotation Equivariant Phase Modeling for Speech Enhancement with Deep Magnitude-Phase Interaction"</p>
+            <p class="authors">Chengzhong Wang, Andong Li, Dingding Yao, and Junfeng Li*</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section>
+            <h2>Abstract</h2>
+            <p>
+                This page demonstrates the performance of our proposed method compared to Semamba w/o PCS, ZipEnhancer,
+                MPSENet-Up, and Universe++ across universal speech degradation scenarios.
+            </p>
+        </section>
+
+        <section>
+            <h2>Training Logs</h2>
+            <p>The following figures visualize the training convergence and PESQ metric improvements over epochs for the universal speech enhancement task trained on synthesized DNS2021 data (300 hours), validated on a subset of WSJ+WHAMR! (150 pieces).
+            </p>
+            
+            <div class="figure-grid">
+                <figure>
+                    <img src="assets/img/training_loss.png" alt="Training Loss Curve">
+                    <figcaption>
+                        Figure 1: Training Loss Convergence (Pink: Proposed, Blue: ZipEnhancer,
+                        Green: MPSENet-Up, Light Blue: Semamba w/o PCS).
+                    </figcaption>
+                </figure>
+                <figure>
+                    <img src="assets/img/validation_loss_pesq.png" alt="Validation Loss (PESQ)">
+                    <figcaption>
+                        Figure 2: Validation Loss (PESQ) (Pink: Proposed, Blue: ZipEnhancer,
+                        Green: MPSENet-Up, Light Blue: Semamba w/o PCS).
+                    </figcaption>
+                </figure>
+            </div>
+
+            <h3>Phase Retrieval on VoiceBank (Validation)</h3>
+            <p>
+                The orange curve denotes the proposed method, the blue curve denotes MP-SENet Up, and the red curve denotes SEMamba.
+                The validation phase loss is computed as GD + IF + PD. Since our method surpasses the baselines after about 250k steps
+                within fewer than 150k training steps, we did not continue training the proposed method further. Training deeper may yield better results.
+            </p>
+
+            <div class="figure-grid">
+                <figure>
+                    <img src="assets/img/pr_validation_pesq.png" alt="Phase Retrieval Validation PESQ">
+                    <figcaption>
+                        Figure 3: Phase Retrieval Validation (PESQ) on VoiceBank. 
+                    </figcaption>
+                </figure>
+                <figure>
+                    <img src="assets/img/pr_validation_phase_loss.png" alt="Phase Retrieval Validation Phase Loss (GD+IF+PD)">
+                    <figcaption>
+                        Figure 4: Phase Retrieval Validation Phase Loss (GD + IF + PD) on VoiceBank.
+                    </figcaption>
+                </figure>
+            </div>
+
+            <h3>Acknowledgment of Baseline Methods</h3>
+            <p>
+                We gratefully acknowledge the authors of the compared baseline methods for sharing their open-sourced code. The following papers present the methods used in this comparison:
+            </p>
+            <ul style="margin-left: 1.5em; line-height: 1.8;">
+                <li>Y.-X. Lu, Y. Ai, and Z.-H. Ling, "Explicit estimation of magnitude and phase spectra in parallel for high-quality speech enhancement," <em>Neural Netw.</em>, vol. 189, p. 107562, 2025.</li>
+                <li>R. Chao, W.-H. Cheng, M. La Quatra, S. M. Siniscalchi, C.-H. H. Yang, S.-W. Fu, and Y. Tsao, "An investigation of incorporating mamba for speech enhancement," in <em>Proc. IEEE Spoken Lang. Technol. Workshop</em> (SLT), 2024, pp. 302–308.</li>
+                <li>H. Wang and B. Tian, "ZipEnhancer: Dual-path down-up sampling-based zipformer for monaural speech enhancement," in <em>Proc. IEEE Int. Conf. Acoust., Speech Signal Process.</em>, 2025, pp. 1–5.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Statistical Significance (p-test for Universal SE scenario: Proposed vs. ZipEnhancer)</h2>
+            <p>
+                We report two-sided p-test results comparing the proposed method with the second-ranked ZipEnhancer.
+                “Significant (+)” indicates improvement in value; “Significant (-)” indicates degradation in value.
+            </p>
+
+            <div class="figure-grid">
+                <figure>
+                    <figcaption><strong>Composite (DN+DR, DN+DR+BWE)</strong></figcaption>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>P-value</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>PESQ</td><td>7.05602e-04</td><td>Significant (+)</td></tr>
+                                <tr><td>STOI</td><td>2.45487e-01</td><td></td></tr>
+                                <tr><td>SI-SDR</td><td>2.07514e-05</td><td>Significant (+)</td></tr>
+                                <tr><td>COVL</td><td>2.61178e-03</td><td>Significant (+)</td></tr>
+                                <tr><td>UTMOS</td><td>7.55323e-04</td><td>Significant (+)</td></tr>
+                                <tr><td>PD(↓)</td><td>6.64324e-03</td><td>Significant (-)</td></tr>
+                                <tr><td>WOPD(↓)</td><td>2.79556e-05</td><td>Significant (-)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </figure>
+
+                <figure>
+                    <figcaption><strong>Overall (DN, DR, BWE, DN+DR, DN+DR+BWE)</strong></figcaption>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>P-value</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>PESQ</td><td>2.05312e-11</td><td>Significant (+)</td></tr>
+                                <tr><td>STOI</td><td>5.54429e-02</td><td></td></tr>
+                                <tr><td>SI-SDR</td><td>8.56033e-07</td><td>Significant (+)</td></tr>
+                                <tr><td>COVL</td><td>4.49094e-12</td><td>Significant (+)</td></tr>
+                                <tr><td>UTMOS</td><td>1.52879e-10</td><td>Significant (+)</td></tr>
+                                <tr><td>PD</td><td>1.17751e-05</td><td>Significant (-)</td></tr>
+                                <tr><td>WOPD</td><td>4.83145e-12</td><td>Significant (-)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </figure>
+            </div>
+        </section>
+
+        <section>
+            <h2>Audio Samples</h2>
+            <p>Please use headphones for the best listening experience.</p>
+            <div id="audio-sections"></div>
+        </section>
+
+        <section>
+            <h2>Supplementary Notes</h2>
+            <p>
+                    For readers' convenience, we provide a brief note on the model's Global Rotation Equivariance (GRE)
+                    on a dedicated page.
+            </p>
+            <a class="btn-link" href="supplementary-analysis.html">Open Supplementary Notes</a>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; </p>
+    </footer>
+
+    <script>
+        const columns = [
+            { key: 'clean', label: 'Clean' },
+            { key: 'degraded', label: 'Degraded (Input)' },
+            { key: 'mpsenet_up', label: 'MPSENet-Up' },
+            { key: 'universepp', label: 'Universe++' },
+            { key: 'semamba', label: 'Semamba' },
+            { key: 'zipenhancer', label: 'ZipEnhancer' },
+            { key: 'proposed', label: 'Proposed' }
+        ];
+
+        const categories = [
+            {
+                title: '1. Noisy Bandlimit',
+                folder: 'noisy_bandlimit',
+                items: [
+                    { id: 1, snr: -5 },
+                    { id: 2, snr: -5 },
+                    { id: 3, snr: -5 },
+                    { id: 4, snr: -5 },
+                    { id: 5, snr: -5 },
+                    { id: 6, snr: -5 }
+                ],
+                filename: ({ id, snr }, key) => `noise_limit_${id}_${key}_snr${snr}.wav`
+            },
+            {
+                title: '2. Noisy Reverb',
+                folder: 'noisy_reverb',
+                items: [
+                    { id: 1, snr: -5 },
+                    { id: 2, snr: -5 },
+                    { id: 3, snr: -5 },
+                    { id: 4, snr: -5 },
+                    { id: 5, snr: -5 },
+                    { id: 6, snr: -5 }
+                ],
+                filename: ({ id, snr }, key) => `noise_reverb_${id}_${key}_snr${snr}.wav`
+            },
+            {
+                title: '3. Noisy Reverb Bandlimit',
+                folder: 'noisy_reverb_bandlimit',
+                items: [
+                    { id: 1, snr: -5 },
+                    { id: 2, snr: -5 },
+                    { id: 3, snr: -5 },
+                    { id: 4, snr: -5 },
+                    { id: 5, snr: -5 },
+                    { id: 6, snr: -5 }
+                ],
+                filename: ({ id, snr }, key) => `noise_reverb_limit_${id}_${key}_snr${snr}.wav`
+            }
+        ];
+
+        const createCell = (folder, filename, label) => {
+            const td = document.createElement('td');
+            const img = document.createElement('img');
+            img.src = `assets/img/spectrograms/${folder}/${filename.replace('.wav', '.png')}`;
+            img.alt = `${label} Spectrogram`;
+            img.className = 'spectrogram';
+
+            const audio = document.createElement('audio');
+            audio.controls = true;
+            audio.src = `assets/audio/${folder}/${filename}`;
+
+            td.appendChild(img);
+            td.appendChild(audio);
+            return td;
+        };
+
+        const container = document.getElementById('audio-sections');
+        categories.forEach((category) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'degradation-type';
+
+            const title = document.createElement('h3');
+            title.textContent = category.title;
+            wrapper.appendChild(title);
+
+            const scroll = document.createElement('div');
+            scroll.className = 'table-scroll';
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            const idHeader = document.createElement('th');
+            idHeader.textContent = 'ID';
+            headerRow.appendChild(idHeader);
+            columns.forEach((col) => {
+                const th = document.createElement('th');
+                th.textContent = col.label;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            category.items.forEach((item) => {
+                const row = document.createElement('tr');
+                const idCell = document.createElement('td');
+                idCell.textContent = String(item.id).padStart(2, '0');
+                row.appendChild(idCell);
+
+                columns.forEach((col) => {
+                    const filename = category.filename(item, col.key);
+                    row.appendChild(createCell(category.folder, filename, col.label));
+                });
+
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+            scroll.appendChild(table);
+            wrapper.appendChild(scroll);
+            container.appendChild(wrapper);
+        });
+    </script>
+
+</body>
+</html>

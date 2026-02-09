@@ -1,0 +1,6 @@
+reverb/
+noisy/
+bandlimit/
+only_*
+__pycache__/
+*_audios
