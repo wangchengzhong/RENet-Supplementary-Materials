@@ -28,7 +28,7 @@
 
         <section>
             <h2>Training Logs</h2>
-            <p>The following figures visualize the training convergence and PESQ metric improvements over epochs for the universal speech enhancement task trained on synthesized DNS2021 data (300 hours), validated on a subset of WSJ+WHAMR! (150 pieces).
+            <p>The following figures visualize the training convergence and PESQ metric improvements over epochs for the universal speech enhancement task trained on synthesized DNS2021 data (300 hours), validated on a subset of WSJ+WHAMR! (150 pieces), all with the same loss and optimizer configurations.
             </p>
             
             <div class="figure-grid">
@@ -50,7 +50,7 @@
 
             <h3>DNS-2020 Large-Scale Denoising (3000h)</h3>
             <p>
-                The following results are from the ultra-large-scale DNS-2020 purely denoising task. The grey curve denotes the proposed method, the blue curve denotes SEMamba w/o PCS, and the red curve denotes MP-SENet-Up.
+                The following results are from the ultra-large-scale DNS-2020 purely denoising task, all with the same loss and optimizer configurations (the same as that of MP-SENet). The grey curve denotes the proposed method, the blue curve denotes SEMamba w/o PCS, and the red curve denotes MP-SENet-Up.
             </p>
             <div class="figure-grid">
                 <figure>
@@ -72,6 +72,7 @@
                 The orange curve denotes the proposed method, the blue curve denotes MP-SENet Up, and the red curve denotes SEMamba.
                 The validation phase loss is computed as GD + IF + PD. Since our method surpasses the baselines after about 250k steps
                 within fewer than 150k training steps, we did not continue training the proposed method further. Training deeper may yield better results.
+                All models are trained with the same loss and optimizer configurations.
             </p>
 
             <div class="figure-grid">
